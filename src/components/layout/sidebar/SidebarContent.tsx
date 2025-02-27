@@ -89,8 +89,8 @@ export const SidebarContent = () => {
     items: group.items.filter(item => {
       // Find visibility setting for this menu item
       const visibility = menuVisibility.find(v => 
-        v.menu_key === item.path || 
-        v.menu_key === `/${item.path.split('/')[1]}`  // Check main route
+        v.menu_key === item.title || 
+        v.menu_path === `/${item.path.split('/')[1]}`  // Check main route
       );
 
       // If no visibility setting found or no user type, hide item
