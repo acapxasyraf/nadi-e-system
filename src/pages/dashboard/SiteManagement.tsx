@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
@@ -14,23 +13,27 @@ const SiteManagement = () => {
   const { data: permissions = [] } = usePermissions();
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const canManageSettings = permissions.some(p => p.name === 'manage_settings');
+  const canManageSettings = permissions.some(
+    (p) => p.name === "manage_settings"
+  );
 
   useEffect(() => {
     const checkSuperAdmin = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (!user) return;
 
         const { data: profile } = await supabase
-          .from('profiles')
-          .select('user_type')
-          .eq('id', user.id)
+          .from("profiles")
+          .select("user_type")
+          .eq("id", user.id)
           .single();
 
-        setIsSuperAdmin(profile?.user_type === 'super_admin');
+        setIsSuperAdmin(profile?.user_type === "super_admin");
       } catch (error) {
-        console.error('Error checking super admin status:', error);
+        console.error("Error checking super admin status:", error);
       } finally {
         setIsLoading(false);
       }
@@ -70,9 +73,7 @@ const SiteManagement = () => {
           <main className="flex-1 p-8 overflow-auto bg-gray-50 dark:bg-gray-900">
             <div className="container mx-auto max-w-6xl">
               <SiteManagementHeader />
-              <div className="space-y-8">
-                <SiteManagement />
-              </div>
+              <div className="space-y-8">{/* <SiteManagement /> */}</div>
             </div>
           </main>
         </div>

@@ -1,4 +1,5 @@
-import { MenuGroup } from "@/types/menu";
+import { MenuItem } from "@/types/menu";
+import { getAccordionIcon } from "./sidebar-icons";
 import {
   menuItems,
   hrMenuItems,
@@ -14,9 +15,10 @@ import {
   communityItems,
   financialItems,
   complianceItems,
+  siteManagementItems,
 } from "@/components/layout/sidebar/menu-items";
 
-export const menuGroups: MenuGroup[] = [
+export const menuGroups = [
   {
     label: "Admin Console",
     route: "/admin",
@@ -58,6 +60,11 @@ export const menuGroups: MenuGroup[] = [
     items: claimItems,
   },
   {
+    label: "Site Management",
+    route: "/site-management",
+    items: siteManagementItems,
+  },
+  {
     label: "Asset Management",
     route: "/asset",
     items: assetItems,
@@ -87,4 +94,17 @@ export const menuGroups: MenuGroup[] = [
     route: "/compliance",
     items: complianceItems,
   },
+
+  // TO-DO: Remove this section
+  // {
+  //   label: "Administration",
+  //   items: [
+  //     {
+  //       title: "State Holidays",
+  //       path: "/dashboard/state-holidays",
+  //       icon: Calendar,
+  //       visibleTo: ["super_admin"]
+  //     }
+  //   ]
+  // },
 ];

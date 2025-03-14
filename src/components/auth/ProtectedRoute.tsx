@@ -1,38 +1,50 @@
-
 import { ReactNode, useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
-import { Permission } from "@/types/auth";
+import { Permission, UserType } from "@/types/auth";
+import { useAuth } from "@/hooks/useAuth";
+import { useUserAccess } from "@/hooks/use-user-access";
+import { useMenuPathVisibility } from "@/hooks/use-menu-visibility";
+import { AuthLoading } from "./AuthLoading";
 
 interface ProtectedRouteProps {
   children: ReactNode;
   requiredPermission?: string;
+  allowedUserTypes?: UserType[];
 }
 
-export const ProtectedRoute = ({ children, requiredPermission }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({
+  children,
+  requiredPermission,
+  allowedUserTypes,
+}: ProtectedRouteProps) => {
   const location = useLocation();
   const { toast } = useToast();
-  const { data: permissions = [], isLoading, error } = usePermissions();
+  const { user } = useAuth();
+  const { userType, isSuperAdmin, accessChecked } = useUserAccess();
+  const {
+    data: permissions = [],
+    isLoading: permissionsLoading,
+    error,
+  } = usePermissions();
 
-  // Check if user is super_admin
-  const checkSuperAdmin = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return false;
+  // Extract path parts for route checking
+  const pathParts = location.pathname.split("/").filter(Boolean);
+  const mainPath = pathParts.length > 0 ? pathParts[0] : null;
+  const subPath = pathParts.length > 1 ? pathParts[1] : null;
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('user_type')
-      .eq('id', user.id)
-      .single();
+  // Use our new hook to check menu visibility
+  const { hasAccess, loading: menuAccessLoading } = useMenuPathVisibility(
+    mainPath || "",
+    subPath,
+    userType
+  );
 
-    return profile?.user_type === 'super_admin';
-  };
-
+  // Log any errors with permissions
   useEffect(() => {
     if (error) {
-      console.error('Error loading permissions:', error);
+      console.error("Error loading permissions:", error);
       toast({
         title: "Error",
         description: "Failed to load permissions. Please try again.",
@@ -41,42 +53,43 @@ export const ProtectedRoute = ({ children, requiredPermission }: ProtectedRouteP
     }
   }, [error, toast]);
 
-  useEffect(() => {
-    const checkAccess = async () => {
-      if (!isLoading && requiredPermission) {
-        const isSuperAdmin = await checkSuperAdmin();
-        
-        if (!isSuperAdmin && !permissions.some((permission: Permission) => permission.name === requiredPermission)) {
-          console.log('Access denied: Missing required permission:', requiredPermission);
-          toast({
-            title: "Access Denied",
-            description: "You don't have permission to access this page.",
-            variant: "destructive",
-          });
-        }
-      }
-    };
-
-    checkAccess();
-  }, [isLoading, permissions, requiredPermission, toast]);
-
-  if (isLoading) {
-    return <div>Loading permissions...</div>;
+  // Show loading component while checking authentication or menu access
+  if (permissionsLoading || !accessChecked || menuAccessLoading) {
+    return <AuthLoading />;
   }
 
-  if (error) {
+  // Redirect to login if not authenticated
+  if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  const hasAccess = async () => {
-    const isSuperAdmin = await checkSuperAdmin();
-    return isSuperAdmin || (requiredPermission 
-      ? permissions.some((permission: Permission) => permission.name === requiredPermission)
-      : true);
-  };
+  // Redirect if user doesn't have access to this route based on menu visibility
+  if (!hasAccess) {
+    console.log("Access denied based on menu visibility");
+    toast({
+      title: "Access Denied",
+      description: "You don't have permission to access this page.",
+      variant: "destructive",
+    });
+    return <Navigate to="/dashboard" replace />;
+  }
 
-  if (!hasAccess()) {
-    return <Navigate to="/admin/dashboard" replace />;
+  // Check if user has required permissions or is of an allowed user type
+  const hasPermissionAccess =
+    isSuperAdmin ||
+    (requiredPermission
+      ? permissions.some(
+          (permission: Permission) => permission.name === requiredPermission
+        )
+      : true);
+
+  const hasUserTypeAccess =
+    isSuperAdmin ||
+    (allowedUserTypes ? allowedUserTypes.includes(userType as UserType) : true);
+
+  if (!hasPermissionAccess || !hasUserTypeAccess) {
+    console.log("Access denied based on permissions or user type");
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;

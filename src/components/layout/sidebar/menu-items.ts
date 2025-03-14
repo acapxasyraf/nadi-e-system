@@ -1,9 +1,8 @@
-
-import { 
-  LayoutDashboard, 
-  Settings, 
-  Users, 
-  Shield, 
+import {
+  LayoutDashboard,
+  Settings,
+  Users,
+  Shield,
   UserCog,
   Activity,
   FileBarChart,
@@ -33,7 +32,8 @@ import {
   Gauge,
   FileCheck,
   Eye,
-  Layout
+  Layout,
+  Building,
 } from "lucide-react";
 
 export const menuItems = [
@@ -45,8 +45,15 @@ export const menuItems = [
   { title: "Activity Log", icon: Activity, path: "/admin/activity" },
   { title: "Reports", icon: FileBarChart, path: "/admin/reports" },
   { title: "Calendar", icon: Calendar, path: "/admin/calendar" },
+  {
+    title: "State Holidays",
+    icon: Calendar,
+    path: "/admin/state-holidays",
+    visibleTo: ["super_admin"],
+  },
   { title: "Notifications", icon: Bell, path: "/admin/notifications" },
-  { title: "Site Management", icon: Settings, path: "/admin/siteManagement" },
+  { title: "Organizations", icon: Users, path: "/admin/organizations" },
+  // { title: "Site Management", icon: Settings, path: "/admin/siteManagement" },
   { title: "Settings", icon: Settings, path: "/admin/settings" },
 ];
 
@@ -114,6 +121,10 @@ export const financialItems = [
 ];
 
 export const complianceItems = [
-  { title: "Audit Logs", icon: FileCheck, path: "/compliance/audit" },
+  { title: "Audit Logs", icon: FileCheck, path: "/siteMManagement" },
   { title: "System Reports", icon: Gauge, path: "/compliance/reports" },
+];
+
+export const siteManagementItems = [
+  { title: "Site Management", icon: Building, path: "/site-management/main" },
 ];
