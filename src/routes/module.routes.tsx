@@ -24,211 +24,248 @@ import FinancialTransactions from "@/pages/dashboard/financial/Transactions";
 import AuditLogs from "@/pages/dashboard/compliance/AuditLogs";
 import ComplianceReports from "@/pages/dashboard/compliance/ComplianceReports";
 import WorkflowDashboard from "@/pages/dashboard/workflow/WorkflowDashboard";
-import UserProfile from "@/pages/dashboard/profile/UserProfile";
-import SiteManagement from "@/pages/dashboard/SiteManagement";
+import WorkflowConfiguration from "@/pages/dashboard/workflow/WorkflowConfiguration";
+import SiteManagement from "@/pages/dashboard/site/SiteManagement";
+import SiteDetails from "@/pages/dashboard/site/SiteDetail";
+import SiteClosureApproval from "@/pages/dashboard/site/SiteClosureApproval";
+import InventoryDashboard from "@/pages/dashboard/inventory/InventoryDashboard";
+import InventorySettings from "@/pages/dashboard/inventory/InventorySettings";
 
 export const moduleRoutes: RouteObject[] = [
   // HR Routes
   {
     path: "/hr",
     element: (
-      <ProtectedRoute requiredPermission="view_hr_dashboard">
-        <HRDashboard />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_hr_dashboard">
+      <HRDashboard />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/hr/employees",
     element: (
-      <ProtectedRoute requiredPermission="manage_employees">
-        <Employees />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_employees">
+      <Employees />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/hr/attendance",
     element: (
-      <ProtectedRoute requiredPermission="manage_attendance">
-        <Attendance />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_attendance">
+      <Attendance />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/hr/leave",
     element: (
-      <ProtectedRoute requiredPermission="manage_leave">
-        <Leave />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_leave">
+      <Leave />
+      // </ProtectedRoute>
     ),
   },
   // POS Routes
   {
     path: "/pos",
     element: (
-      <ProtectedRoute requiredPermission="view_pos_dashboard">
-        <POSDashboard />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_pos_dashboard">
+      <POSDashboard />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/pos/products",
     element: (
-      <ProtectedRoute requiredPermission="manage_products">
-        <Products />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_products">
+      <Products />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/pos/transactions",
     element: (
-      <ProtectedRoute requiredPermission="view_pos_transactions">
-        <POSTransactions />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_pos_transactions">
+      <POSTransactions />
+      // </ProtectedRoute>
     ),
   },
   // Claim Routes
   {
     path: "/claim",
     element: (
-      <ProtectedRoute requiredPermission="view_claims">
-        <ClaimDashboard />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_claims">
+      <ClaimDashboard />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/claim/settings",
     element: (
-      <ProtectedRoute requiredPermission="manage_claim_settings">
-        <ClaimSettings />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_claim_settings">
+      <ClaimSettings />
+      // </ProtectedRoute>
     ),
   },
   // Asset Routes
   {
     path: "/asset",
     element: (
-      <ProtectedRoute requiredPermission="view_assets">
-        <AssetDashboard />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_assets">
+      <AssetDashboard />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/asset/settings",
     element: (
-      <ProtectedRoute requiredPermission="manage_asset_settings">
-        <AssetSettings />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_asset_settings">
+      <AssetSettings />
+      // </ProtectedRoute>
+    ),
+  },
+  // Inventory Routes
+  {
+    path: "/inventory",
+    element: (
+      // <ProtectedRoute requiredPermission="view_assets">
+      <InventoryDashboard />
+      // </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/inventory/settings",
+    element: (
+      // <ProtectedRoute requiredPermission="manage_asset_settings">
+      <InventorySettings />
+      // </ProtectedRoute>
     ),
   },
   // Finance Routes
   {
     path: "/finance",
     element: (
-      <ProtectedRoute requiredPermission="view_finance">
-        <FinanceDashboard />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_finance">
+      <FinanceDashboard />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/finance/settings",
     element: (
-      <ProtectedRoute requiredPermission="manage_finance_settings">
-        <FinanceSettings />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_finance_settings">
+      <FinanceSettings />
+      // </ProtectedRoute>
     ),
   },
   // Programmes Routes
   {
     path: "/programmes",
     element: (
-      <ProtectedRoute requiredPermission="view_programmes">
-        <ProgrammesDashboard />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_programmes">
+      <ProgrammesDashboard />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/programmes/settings",
     element: (
-      <ProtectedRoute requiredPermission="manage_programme_settings">
-        <ProgrammeSettings />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_programme_settings">
+      <ProgrammeSettings />
+      // </ProtectedRoute>
     ),
   },
   // Service Routes
   {
     path: "/services/info",
     element: (
-      <ProtectedRoute requiredPermission="view_services">
-        <ServiceInfo />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_services">
+      <ServiceInfo />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/services/transactions",
     element: (
-      <ProtectedRoute requiredPermission="view_service_transactions">
-        <ServiceTransactions />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_service_transactions">
+      <ServiceTransactions />
+      // </ProtectedRoute>
     ),
   },
   // Community Routes
   {
     path: "/community",
     element: (
-      <ProtectedRoute requiredPermission="view_community">
-        <CommunityDashboard />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_community">
+      <CommunityDashboard />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/community/moderation",
     element: (
-      <ProtectedRoute requiredPermission="moderate_community">
-        <CommunityModeration />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="moderate_community">
+      <CommunityModeration />
+      // </ProtectedRoute>
     ),
   },
   // Financial Routes
   {
     path: "/financial/wallet",
     element: (
-      <ProtectedRoute requiredPermission="view_wallet">
-        <Wallet />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_wallet">
+      <Wallet />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/financial/transactions",
     element: (
-      <ProtectedRoute requiredPermission="view_financial_transactions">
-        <FinancialTransactions />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_financial_transactions">
+      <FinancialTransactions />
+      // </ProtectedRoute>
     ),
   },
   // Compliance Routes
   {
     path: "/compliance/audit",
     element: (
-      <ProtectedRoute requiredPermission="view_audit_logs">
-        <AuditLogs />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_audit_logs">
+      <AuditLogs />
+      // </ProtectedRoute>
     ),
   },
   {
     path: "/compliance/reports",
     element: (
-      <ProtectedRoute requiredPermission="view_compliance_reports">
-        <ComplianceReports />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="view_compliance_reports">
+      <ComplianceReports />
+      // </ProtectedRoute>
     ),
   },
-  // Workflow Routes
+  // Workflow Routes - Keep only configuration related routes
   {
     path: "/workflow",
     element: (
-      <ProtectedRoute requiredPermission="manage_workflows">
-        <WorkflowDashboard />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="manage_workflows">
+      <WorkflowDashboard />
+      // </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/workflow/configuration",
+    element: (
+      // <ProtectedRoute requiredPermission="manage_workflow_configuration">
+      <WorkflowConfiguration />
+      // </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/workflow/configuration/:id",
+    element: (
+      // <ProtectedRoute requiredPermission="manage_workflow_configuration">
+      <WorkflowConfiguration />
+      // </ProtectedRoute>
     ),
   },
 
@@ -236,14 +273,25 @@ export const moduleRoutes: RouteObject[] = [
   {
     path: "/site-management/main",
     element: (
-      <ProtectedRoute requiredPermission="site_management">
-        <SiteManagement />
-      </ProtectedRoute>
+      // <ProtectedRoute requiredPermission="site_management">
+      <SiteManagement />
+      // </ProtectedRoute>
     ),
   },
-  // Profile Routes
-  // {
-  //   path: "/dashboard/profile",
-  //   element:<UserProfile />,
-  // },
+  {
+    path: "/site/:id",
+    element: (
+      // <ProtectedRoute requiredPermission="view_site_details">
+      <SiteDetails />
+      // </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/site/approval",
+    element: (
+      // <ProtectedRoute requiredPermission="view_site_details">
+      <SiteClosureApproval />
+      // </ProtectedRoute>
+    ),
+  },
 ];

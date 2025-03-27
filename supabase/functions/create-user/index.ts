@@ -11,8 +11,11 @@ interface CreateUserRequest {
   email: string;
   fullName: string;
   userType: string;
+  userGroup?: string;
   phoneNumber?: string;
-  createdBy: string;
+  icNumber: string;
+  password: string;
+  createdBy?: string;
 }
 
 serve(async (req) => {
@@ -29,10 +32,37 @@ serve(async (req) => {
     );
 
     // Parse the request body
-    const { email, fullName, userType, phoneNumber, createdBy } = await req.json() as CreateUserRequest;
+    const body = await req.text(); // Get raw text first
+    
+    // Make sure the body is not empty
+    if (!body || body.trim() === "") {
+      return new Response(
+        JSON.stringify({ error: "Request body is empty" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    
+    let requestData: CreateUserRequest;
+    
+    try {
+      requestData = JSON.parse(body) as CreateUserRequest;
+    } catch (jsonError) {
+      console.error("JSON parse error:", jsonError, "Raw body:", body);
+      return new Response(
+        JSON.stringify({ error: "Invalid JSON in request body" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    
+    const { email, fullName, userType, userGroup, phoneNumber, icNumber, password, createdBy } = requestData;
 
-    // Generate a random password
-    const password = crypto.randomUUID();
+    // Validate required fields
+    if (!email || !fullName || !userType || !icNumber || !password) {
+      return new Response(
+        JSON.stringify({ error: "Missing required fields" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     // 1. Create the user in Auth
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
@@ -42,6 +72,7 @@ serve(async (req) => {
       user_metadata: {
         full_name: fullName,
         user_type: userType,
+        user_group: userGroup,
       }
     });
 
@@ -60,6 +91,9 @@ serve(async (req) => {
       );
     }
 
+    // Convert userGroup to number if it's a string
+    const userGroupNumber = userGroup ? parseInt(userGroup, 10) : null;
+
     // 2. Update profiles table with additional data if needed
     // (The trigger should have created the basic profile)
     const { error: profileUpdateError } = await supabaseAdmin
@@ -67,6 +101,8 @@ serve(async (req) => {
       .update({
         phone_number: phoneNumber,
         user_type: userType, // Ensure user_type is set correctly
+        user_group: userGroupNumber, // Add user_group as number
+        ic_number: icNumber,
       })
       .eq("id", authData.user.id);
 
@@ -83,7 +119,7 @@ serve(async (req) => {
       .from("users")
       .update({
         phone_number: phoneNumber,
-        created_by: createdBy,
+        created_by: createdBy || null,
       })
       .eq("id", authData.user.id);
 
@@ -94,9 +130,6 @@ serve(async (req) => {
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-
-    // 4. Optionally send a password reset email
-    // For production, you would typically send a welcome email with a password reset link
     
     console.log("User created successfully:", authData.user.id);
 
@@ -107,7 +140,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Unexpected error:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message || "Unknown server error" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

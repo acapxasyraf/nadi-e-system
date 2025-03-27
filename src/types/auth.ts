@@ -1,4 +1,3 @@
-
 export type UserType =
   | "member"
   | "vendor"
@@ -36,6 +35,7 @@ export interface Profile {
   phone_number: string;
   avatar_url?: string;
   user_type: UserType;
+  user_group?: string; // Added user_group property
   theme_preference: "light" | "dark";
   notification_preferences: {
     email: boolean;
@@ -50,7 +50,7 @@ export interface Notification {
   user_id: string;
   title: string;
   message: string;
-  type: NotificationType;
+  type: "info" | "success" | "warning" | "error";
   read: boolean;
   created_at: string;
 }
